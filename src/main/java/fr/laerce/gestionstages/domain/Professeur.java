@@ -13,10 +13,10 @@ import java.util.Objects;
  * @author fred
  */
 @Entity
-@Table(name="PROFESSEURS")
 public class Professeur {
     @Id
-    @Column(name="ID", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
     @Column
     private String nom;
