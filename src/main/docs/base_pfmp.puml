@@ -1,0 +1,64 @@
+@startuml
+
+class professeur {
+  - id: Bigint
+  - nom: String
+  - prenom: String
+  - civilite: String
+  - naissance: Date
+  - code_synchro: String
+  - telephoneMobile: String
+  - telephoneFixe: String
+  - email: String
+  + getters() et setters()
+  + equals()
+  + hashCode()
+  + toString()
+}
+
+class utilisateur {
+   -id: Bigint
+   -login: String
+   -mdp : String
+   + getters() et setters()
+   + equals()
+   + hashCode()
+   + toString()
+}
+
+class division {
+   - id: Bigint
+   - code: String
+   - libelle: String
+   + getters() et setters()
+   + equals()
+   + hashCode()
+   + toString()
+}
+
+class niveau {
+   - id: Bigint
+   - code: String
+   - niveauCourt: String
+   - niveauLong: String
+   + getters() et setters()
+   + equals()
+   + hashCode()
+   + toString()
+}
+
+class discipline {
+   - id: Bigint
+   - code: String
+   - libelle: String
+   + getters() et setters()
+   + equals()
+   + hashCode()
+   + toString()
+}
+
+professeur "0..*" --- "0..*"  division
+professeur "0..*" --- "0..1" discipline
+division "0..*" --- "0..1" niveau
+professeur "0..1" --- "0..1" utilisateur
+@enduml
