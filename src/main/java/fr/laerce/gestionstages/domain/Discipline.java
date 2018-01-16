@@ -1,6 +1,7 @@
 package fr.laerce.gestionstages.domain;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -13,7 +14,6 @@ import java.util.Objects;
  * @author fred
  */
 @Entity
-@Table(name="competences")
 public class Discipline {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,17 @@ public class Discipline {
     @Column(name="libelle", length = 50)
     private String libelle;
 
+    @OneToMany(mappedBy = "discipline")
+    private List<Individu> professeurs = new ArrayList<Individu>();
+
+
+    public List<Individu> getProfesseurs() {
+        return professeurs;
+    }
+
+    public void setProfesseurs(List<Individu> professeurs) {
+        this.professeurs = professeurs;
+    }
 
 
     public Long getId() {
@@ -72,5 +83,13 @@ public class Discipline {
                 ", code='" + code + '\'' +
                 ", libelle='" + libelle + '\'' +
                 '}';
+    }
+
+    public void addProfesseur(Individu individu) {
+        this.getProfesseurs().add(individu);
+    }
+
+    public void removeProfesseur(Individu individu) {
+        this.getProfesseurs().remove(individu);
     }
 }

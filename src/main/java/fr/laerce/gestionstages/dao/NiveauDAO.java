@@ -21,19 +21,19 @@ public class NiveauDAO {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Niveau> findAll(){
+    public List<Niveau> findAll() {
         return entityManager.createQuery("SELECT n FROM  Niveau n", Niveau.class).getResultList();
     }
 
-    public void persist(Niveau niveau){
+    public void persist(Niveau niveau) {
         entityManager.merge(niveau);
     }
 
-    public Niveau getById(Long id){
+    public Niveau getById(Long id) {
         return entityManager.find(Niveau.class, id);
     }
 
-    public void delete(Niveau niveau){
+    public void delete(Niveau niveau) {
         entityManager.remove(niveau);
     }
 }

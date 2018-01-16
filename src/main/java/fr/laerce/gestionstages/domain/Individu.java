@@ -2,6 +2,7 @@ package fr.laerce.gestionstages.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Objects;
  * @author fred
  */
 @Entity
-public class Professeur {
+public class Individu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
@@ -22,10 +23,18 @@ public class Professeur {
     private String nom;
     @Column
     private String prenom;
-    @Column
-    private String login;
-    @Column
-    private String mdp;
+
+    public String getCivilite() {
+        return civilite;
+    }
+
+    public void setCivilite(String civilite) {
+        this.civilite = civilite;
+    }
+
+    @Column (nullable = false)
+    String civilite;
+
     @Column
     private LocalDate naissance;
     @Column
@@ -36,6 +45,45 @@ public class Professeur {
     private String telephoneFixe;
     @Column
     private String email;
+
+    @OneToOne(mappedBy = "individu")
+    private Utilisateur utilisateur;
+
+    @ManyToMany(mappedBy = "professeurs")
+    private List<Division> divisions;
+
+    @ManyToOne
+    private Discipline discipline;
+
+    public Discipline getDiscipline() {
+        return discipline;
+    }
+
+    public void setDiscipline(Discipline discipline) {
+        if (this.discipline != null ){
+            this.discipline.removeProfesseur(this);
+        }
+        this.discipline = discipline;
+        // gestion du lien inverse
+        discipline.addProfesseur(this);
+    }
+
+
+    public List<Division> getDivisions() {
+        return divisions;
+    }
+
+    public void setDivisions(List<Division> divisions) {
+        this.divisions = divisions;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
+    }
 
 
     public Long getId() {
@@ -60,22 +108,6 @@ public class Professeur {
 
     public void setPrenom(String prenom) {
         this.prenom = prenom;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public String getMdp() {
-        return mdp;
-    }
-
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
     }
 
     public LocalDate getNaissance() {
@@ -122,12 +154,10 @@ public class Professeur {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Professeur that = (Professeur) o;
+        Individu that = (Individu) o;
         return Objects.equals(getId(), that.getId()) &&
                 Objects.equals(getNom(), that.getNom()) &&
                 Objects.equals(getPrenom(), that.getPrenom()) &&
-                Objects.equals(getLogin(), that.getLogin()) &&
-                Objects.equals(getMdp(), that.getMdp()) &&
                 Objects.equals(getNaissance(), that.getNaissance()) &&
                 Objects.equals(getCodeSynchro(), that.getCodeSynchro()) &&
                 Objects.equals(getTelephoneMobile(), that.getTelephoneMobile()) &&
@@ -138,17 +168,15 @@ public class Professeur {
     @Override
     public int hashCode() {
 
-        return Objects.hash(getId(), getNom(), getPrenom(), getLogin(), getMdp(), getNaissance(), getCodeSynchro(), getTelephoneMobile(), getTelephoneFixe(), getEmail());
+        return Objects.hash(getId(), getNom(), getPrenom(), getNaissance(), getCodeSynchro(), getTelephoneMobile(), getTelephoneFixe(), getEmail());
     }
 
     @Override
     public String toString() {
-        return "Professeur{" +
+        return "Individu{" +
                 "id=" + id +
                 ", nom='" + nom + '\'' +
                 ", prenom='" + prenom + '\'' +
-                ", login='" + login + '\'' +
-                ", mdp='" + mdp + '\'' +
                 ", naissance=" + naissance +
                 ", codeSynchro='" + codeSynchro + '\'' +
                 ", telephoneMobile='" + telephoneMobile + '\'' +

@@ -1,6 +1,6 @@
 @startuml
 
-class professeur {
+class Individu << Entity >> {
   - id: Bigint
   - nom: String
   - prenom: String
@@ -16,7 +16,7 @@ class professeur {
   + toString()
 }
 
-class utilisateur {
+class Utilisateur << Entity >> {
    -id: Bigint
    -login: String
    -mdp : String
@@ -26,7 +26,7 @@ class utilisateur {
    + toString()
 }
 
-class division {
+class Division << Entity >> {
    - id: Bigint
    - code: String
    - libelle: String
@@ -36,7 +36,7 @@ class division {
    + toString()
 }
 
-class niveau {
+class Niveau << Entity >> {
    - id: Bigint
    - code: String
    - niveauCourt: String
@@ -47,7 +47,7 @@ class niveau {
    + toString()
 }
 
-class discipline {
+class Discipline << Entity >> {
    - id: Bigint
    - code: String
    - libelle: String
@@ -57,8 +57,9 @@ class discipline {
    + toString()
 }
 
-professeur "0..*" --- "0..*"  division
-professeur "0..*" --- "0..1" discipline
-division "0..*" --- "0..1" niveau
-professeur "0..1" --- "0..1" utilisateur
+hide circle
+Individu "0..*" --- "profs *" Division
+Individu " profs *" --- "0..1" Discipline
+Division "0..*" --- "0..1" Niveau
+Individu "0..1" --- "0..1" Utilisateur
 @enduml

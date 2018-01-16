@@ -1,9 +1,7 @@
 package fr.laerce.gestionstages.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -25,6 +23,8 @@ public class Division {
     @ManyToOne
     private Niveau niveau;
 
+    @ManyToMany
+    private List<Individu> professeurs;
 
     public Long getId() {
         return id;
@@ -56,6 +56,15 @@ public class Division {
 
     public void setNiveau(Niveau niveau) {
         this.niveau = niveau;
+    }
+
+
+    public List<Individu> getProfesseurs() {
+        return professeurs;
+    }
+
+    public void setProfesseurs(List<Individu> professeurs) {
+        this.professeurs = professeurs;
     }
 
     @Override

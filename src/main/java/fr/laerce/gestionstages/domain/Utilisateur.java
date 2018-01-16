@@ -22,8 +22,9 @@ public class Utilisateur {
     private String login;
     @Column(nullable = false, length = 30)
     private String mdp;
-    @ManyToOne
-    private Professeur professeur;
+
+    @OneToOne
+    private Individu individu;
 
     public Long getId() {
         return id;
@@ -49,12 +50,12 @@ public class Utilisateur {
         this.mdp = mdp;
     }
 
-    public Professeur getProfesseur() {
-        return professeur;
+    public Individu getIndividu() {
+        return individu;
     }
 
-    public void setProfesseur(Professeur professeur) {
-        this.professeur = professeur;
+    public void setIndividu(Individu individu) {
+        this.individu = individu;
     }
 
     @Override
@@ -65,13 +66,13 @@ public class Utilisateur {
         return Objects.equals(getId(), that.getId()) &&
                 Objects.equals(getLogin(), that.getLogin()) &&
                 Objects.equals(getMdp(), that.getMdp()) &&
-                Objects.equals(getProfesseur(), that.getProfesseur());
+                Objects.equals(getIndividu(), that.getIndividu());
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(getId(), getLogin(), getMdp(), getProfesseur());
+        return Objects.hash(getId(), getLogin(), getMdp(), getIndividu());
     }
 
     @Override
@@ -80,7 +81,7 @@ public class Utilisateur {
                 "id=" + id +
                 ", login='" + login + '\'' +
                 ", mdp='" + mdp + '\'' +
-                ", professeur=" + professeur +
+                ", individu=" + individu +
                 '}';
     }
 }
