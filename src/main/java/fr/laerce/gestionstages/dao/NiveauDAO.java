@@ -22,7 +22,7 @@ public class NiveauDAO {
     private EntityManager entityManager;
 
     public List<Niveau> findAll() {
-        return entityManager.createQuery("SELECT n FROM  Niveau n", Niveau.class).getResultList();
+        return entityManager.createQuery("SELECT n FROM Niveau n", Niveau.class).getResultList();
     }
 
     public void persist(Niveau niveau) {
