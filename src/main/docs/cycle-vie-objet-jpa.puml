@@ -1,6 +1,6 @@
 @startuml
 
-[*] --> Detached : new
+state "New" as New
 
 state "Persistence context" as Persisted {
   state "Managed" as Managed
@@ -11,6 +11,8 @@ state "Persistence context" as Persisted {
   Removed --> Managed : persist()
  }
 
+ [*] --> New : new
+ New --> Persisted : persit()
  Detached --> Persisted : merge
  Managed --> Detached : clear() close()
 
