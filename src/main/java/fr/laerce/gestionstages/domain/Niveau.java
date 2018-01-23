@@ -76,4 +76,13 @@ public class Niveau {
 
         return Objects.hash(getId(), getCode(), getLibelleCourt(), getLibelleLong());
     }
+
+    @Override
+    public String toString() {
+        return "Niveau{" +
+                "code='" + code + '\'' +
+                ", libelleCourt='" + libelleCourt + '\'' +
+                ", libelleLong='" + libelleLong + '\'' +
+                '}';
+    }
 }
