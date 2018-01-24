@@ -2,12 +2,12 @@ package fr.laerce.gestionstages.web;
 
 import fr.laerce.gestionstages.dao.DisciplineRepository;
 import fr.laerce.gestionstages.domain.Discipline;
+import fr.laerce.gestionstages.service.ImportFromSTSBis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.Optional;
 
@@ -17,7 +17,15 @@ public class AdminController {
     @Autowired
     DisciplineRepository repo;
 
-    // après avoir étudier
+    ImportFromSTSBis importFromSTS;
+
+    @Autowired
+    public void setImportFromSTS(ImportFromSTSBis importFromSTS) {
+        this.importFromSTS = importFromSTS;
+        this.importFromSTS.setFileName("/home/kpu/download/sts_emp_0940321S_2017.xml");
+    }
+
+// après avoir étudier
     //  https://spring.io/guides/gs/accessing-data-jpa/
     // puis
     //  https://spring.io/guides/gs/handling-form-submission/
@@ -29,12 +37,13 @@ public class AdminController {
 
     @GetMapping("/disciplines")
     public String listeDisciplines(Model model) {
+        System.out.println("Nb de niveaux = " + importFromSTS.getDicoNiveaux().size());
         model.addAttribute("disciplines", repo.findAll());
         return "disciplines";
     }
 
-    @GetMapping("/deletedisciplines/{id}")
-    public String listeDisciplines(@PathVariable("id") long id) {
+    @GetMapping("/deletediscipline/{id}")
+    public String deleteDiscipline(@PathVariable("id") Long id) {
         // le repository nous oblige à géger les pointeurs null
         // via un Optional
         Optional<Discipline> d = repo.findById(id);
