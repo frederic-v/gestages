@@ -1,7 +1,7 @@
 package fr.laerce.gestionstages.service;
 
-public class STSImportException extends RuntimeException {
-  public STSImportException(String message) {
+public class GSImportSTSException extends RuntimeException {
+  public GSImportSTSException(String message) {
     super(message);
   }
 }

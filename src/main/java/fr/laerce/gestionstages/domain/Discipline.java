@@ -23,7 +23,7 @@ public class Discipline {
     @Column(name="libelle", length = 50)
     private String libelle;
 
-    @OneToMany(mappedBy = "discipline")
+    @ManyToMany(mappedBy = "disciplines")
     private List<Individu> professeurs = new ArrayList<Individu>();
 
 

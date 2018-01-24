@@ -44,7 +44,6 @@ public class ImportFromSTS {
 
     }
 
-
     public int parse(InputStream is) {
         int retVal = 0;
         try {
