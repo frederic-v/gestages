@@ -111,6 +111,12 @@ public class ImportFromSTS {
         try {
             XPathExpression expression = xPath.compile(xPathIndividus);
             NodeList nl1 = (NodeList) expression.evaluate(expression, XPathConstants.NODESET);
+            for (int i = 0; i < nl1.getLength() ; i++){
+                Node n1 = nl1.item(i);
+                if(n1.getNodeType() == Node.ELEMENT_NODE){
+
+                }
+            }
         } catch (XPathExpressionException e) {
             e.printStackTrace();
         }
