@@ -2,6 +2,7 @@ package fr.laerce.gestionstages.web;
 
 import fr.laerce.gestionstages.dao.DisciplineRepository;
 import fr.laerce.gestionstages.domain.Discipline;
+import fr.laerce.gestionstages.service.GSImportSTSException;
 import fr.laerce.gestionstages.service.ImportFromSTSBis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,8 @@ import java.util.Optional;
 @Controller
 public class AdminController {
 
+  String errorServiceImport;
+
   @Autowired
   DisciplineRepository repo;
 
@@ -23,11 +26,20 @@ public class AdminController {
   @Autowired
   public void setImportFromSTS(ImportFromSTSBis importFromSTS) {
     this.importFromSTS = importFromSTS;
-    this.importFromSTS.parse("/home/kpu/download/sts_emp_0940321S_2017.xml");
+    try {
+      this.importFromSTS.parse("/home/kpu/download/sts_emp_0940321S_2017.xml");
+    }catch (GSImportSTSException e) {
+      errorServiceImport = e.getMessage();
+      System.out.println("in injection errorServiceImport = "+ errorServiceImport);
+    }
   }
 
   @GetMapping("/populate")
   public String populate(Model model) {
+    System.out.println("in pupulate errorServiceImport = "+ errorServiceImport);
+    if (errorServiceImport != null && !errorServiceImport.isEmpty()) {
+      model.addAttribute("message", errorServiceImport);
+    }
     model.addAttribute("niveaux", importFromSTS.getDicoNiveaux().size());
     model.addAttribute("discilines", importFromSTS.getDicoDisciplines().size());
     return "populate";
