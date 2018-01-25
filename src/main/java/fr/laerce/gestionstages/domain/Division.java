@@ -23,9 +23,6 @@ public class Division {
     @ManyToOne
     private Niveau niveau;
 
-    @ManyToMany
-    private List<Individu> professeurs;
-
     public Long getId() {
         return id;
     }
@@ -58,15 +55,6 @@ public class Division {
         this.niveau = niveau;
     }
 
-
-    public List<Individu> getProfesseurs() {
-        return professeurs;
-    }
-
-    public void setProfesseurs(List<Individu> professeurs) {
-        this.professeurs = professeurs;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -79,7 +67,6 @@ public class Division {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(getId(), getCode(), getLibelle());
     }
 
