@@ -60,6 +60,14 @@ public class Niveau {
         this.divisions = divisions;
     }
 
+    public void addDivision(Division division){
+        divisions.add(division);
+    }
+
+    public void removeDivision(Division division){
+        divisions.remove(division);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

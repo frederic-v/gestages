@@ -62,4 +62,17 @@ Individu "0..*" --- "profs *" Division
 Individu " profs *" --- "0..1" Discipline
 Division "0..*" --- "0..1" Niveau
 Individu "0..1" --- "0..1" Utilisateur
+
+
 @enduml
+
+
+
+
+
+
+
+
+
+
+

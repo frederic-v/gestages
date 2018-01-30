@@ -48,6 +48,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Pour la gestion des properties personnalisées -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/net.sourceforge.nekohtml/nekohtml -->
         <dependency>
             <groupId>net.sourceforge.nekohtml</groupId>
@@ -63,6 +69,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
+
     </build>
 
     <repositories>
