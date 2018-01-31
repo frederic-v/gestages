@@ -2,6 +2,7 @@ package fr.laerce.gestionstages.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,6 +47,12 @@ public class Individu {
 
   @ManyToMany
   private List<Discipline> disciplines;
+
+
+  public Individu(){
+    this.divisions = new ArrayList<>();
+    this.disciplines = new ArrayList<>();
+  }
 
   public List<Discipline> getDisciplines() {
     return disciplines;
@@ -169,6 +176,11 @@ public class Individu {
             Objects.equals(getEmail(), that.getEmail());
   }
 
+
+  public void addDivision(Division division) {
+    this.divisions.add(division);
+  }
+
   @Override
   public int hashCode() {
 
@@ -188,4 +200,5 @@ public class Individu {
             ", email='" + email + '\'' +
             '}';
   }
+
 }

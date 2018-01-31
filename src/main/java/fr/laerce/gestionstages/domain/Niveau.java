@@ -68,22 +68,7 @@ public class Niveau {
         divisions.remove(division);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Niveau niveau = (Niveau) o;
-        return Objects.equals(getId(), niveau.getId()) &&
-                Objects.equals(getCode(), niveau.getCode()) &&
-                Objects.equals(getLibelleCourt(), niveau.getLibelleCourt()) &&
-                Objects.equals(getLibelleLong(), niveau.getLibelleLong());
-    }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getId(), getCode(), getLibelleCourt(), getLibelleLong());
-    }
 
     @Override
     public String toString() {

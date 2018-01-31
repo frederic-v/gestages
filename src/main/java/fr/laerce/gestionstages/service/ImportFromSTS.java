@@ -4,6 +4,7 @@ import fr.laerce.gestionstages.domain.Discipline;
 import fr.laerce.gestionstages.domain.Division;
 import fr.laerce.gestionstages.domain.Individu;
 import fr.laerce.gestionstages.domain.Niveau;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -14,184 +15,288 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.*;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.*;
 
-/**
- * Projet gestionstages
- * Pour LAERCE SAS
- * <p>
- * Créé le  23/01/2018.
- *
- * @author fred
- */
+@Service
 public class ImportFromSTS {
-    private DocumentBuilder documentBuilder;
-    private Document document;
-    private XPath xPath;
+  private String fileName;
+  private DocumentBuilder documentBuilder;
+  private Document document;
+  private XPath xPath;
 
+  private Map<String, Niveau> dicoNiveaux;
+  private Map<String, Division> dicoDivisions;
+  private Map<String, Individu> dicoIndividus;
+  private Map<String, Discipline> dicoDisciplines;
 
-    public ImportFromSTS() {
-        try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-            documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            XPathFactory xPathFactory = XPathFactory.newInstance();
-            xPath = xPathFactory.newXPath();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
+  public ImportFromSTS() {
+    dicoNiveaux = new HashMap<>();
+    dicoDivisions = new HashMap<>();
+    dicoIndividus = new HashMap<>();
+    dicoDisciplines = new HashMap<>();
+  }
 
+  public void parse(String fileName) {
+    try {
+      this.fileName = fileName;
+
+      DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+      documentBuilder = documentBuilderFactory.newDocumentBuilder();
+      XPathFactory xPathFactory = XPathFactory.newInstance();
+      xPath = xPathFactory.newXPath();
+      document = documentBuilder.parse(new FileInputStream(fileName));
+
+      // Initialisation des dictionnaires
+      this.dicoNiveaux = buildNiveaux();
+      this.dicoDivisions = buildDivision();
+      this.dicoDisciplines = buildDiscipline();
+      this.dicoIndividus = buildIndividu();
+
+    } catch (Exception e) {
+      e.printStackTrace();
+      String message = (e.getMessage() == null) ? e.getClass().getName(): e.getMessage();
+      throw new ImportSTSException(message);
     }
+  }
 
-    public int parse(InputStream is) {
-        int retVal = 0;
-        try {
-            document = documentBuilder.parse(is);
-            for(Niveau niveau: parseNiveaux().values()){
-                System.out.println(niveau);
+  public Map<String, Niveau> getDicoNiveaux() {
+    return dicoNiveaux;
+  }
+
+  public Map<String, Division> getDicoDivisions() {
+    return dicoDivisions;
+  }
+
+  public Map<String, Individu> getDicoIndividus() {
+    return dicoIndividus;
+  }
+
+  public Map<String, Discipline> getDicoDisciplines() {
+    return dicoDisciplines;
+  }
+
+  public String getFileName() {
+    return fileName;
+  }
+
+  private Map<String, Niveau> buildNiveaux() throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+
+    final String xPathNiveaux = "/STS_EDT/NOMENCLATURES/MEFSTATS4/*";
+
+    Map<String, Niveau> niveaux = new HashMap<>();
+
+    XPathExpression expression = xPath.compile(xPathNiveaux);
+    NodeList nl1 = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+    for (int i = 0; i < nl1.getLength(); i++) {
+      Node n1 = nl1.item(i);
+      if (n1.getNodeType() == Node.ELEMENT_NODE) {
+        NamedNodeMap nnm = n1.getAttributes();
+        String code = nnm.getNamedItem("CODE").getTextContent();
+        if (!niveaux.containsKey(code)) {
+          Niveau niveau = new Niveau();
+          niveau.setCode(code);
+          NodeList nl2 = n1.getChildNodes();
+          for (int j = 0; j < nl2.getLength(); j++) {
+            Node n2 = nl2.item(j);
+            if (n2.getNodeType() == Node.ELEMENT_NODE) {
+              switch (n2.getNodeName()) {
+                case "LIBELLE_COURT":
+                  niveau.setLibelleCourt(n2.getTextContent());
+                  break;
+                case "LIBELLE_LONG":
+                  niveau.setLibelleLong(n2.getTextContent());
+                  break;
+              }
             }
-            for(Division division: parseDivisions().values()){
-                System.out.println(division);
-            }
-            for(Discipline discipline: parseDisciplines().values()){
-                System.out.println(discipline);
-            }
-        } catch (SAXException e) {
-            e.printStackTrace();
-            retVal = 1;
-        } catch (IOException e) {
-            e.printStackTrace();
-            retVal = 2;
+          }
+          niveaux.put(code, niveau);
         }
-
-        return retVal;
+      }
     }
+    //System.out.println(niveaux.get("2213"));
+    return niveaux;
+  }
 
-    private Map<String,Niveau> parseNiveaux(){
-        final String xPathNiveaux = "/STS_EDT/NOMENCLATURES/MEFSTATS4/*";
-        Map<String,Niveau> niveaux = new HashMap<>();
-        try {
-            XPathExpression expression = xPath.compile(xPathNiveaux);
-            NodeList nl1 = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
-            for(int i = 0; i < nl1.getLength() ; i++ ){
-                Node n1 = nl1.item(i);
-                Niveau niveau = new Niveau();
-                if(n1.getNodeType()== Node.ELEMENT_NODE) {
-                    NamedNodeMap nnm = n1.getAttributes();
-                    String code = nnm.getNamedItem("CODE").getTextContent();
-                    niveau.setCode(code);
-                    NodeList nl2 = n1.getChildNodes();
-                    for(int j=0; j < nl2.getLength() ; j++){
-                        Node n2 = nl2.item(j);
-                        if(n2.getNodeType()== Node.ELEMENT_NODE){
-                            switch (n2.getNodeName()){
-                                case "LIBELLE_COURT":
-                                    niveau.setLibelleCourt(n2.getTextContent());
-                                    break;
-                                case "LIBELLE_LONG":
-                                    niveau.setLibelleLong(n2.getTextContent());
-                                    break;
-                            }
+  private Map<String, Division> buildDivision() throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+    final String xPathDivisions = "/STS_EDT/DONNEES/STRUCTURE/DIVISIONS/*";
+
+    Map<String, Division> divisions = new HashMap<>();
+
+    XPathExpression expression = xPath.compile(xPathDivisions);
+    NodeList nl1 = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+    for (int i = 0; i < nl1.getLength(); i++) {
+      //List<Individu> lstProfs = new ArrayList<>();
+      Node n1 = nl1.item(i);
+      if (n1.getNodeType() == Node.ELEMENT_NODE) {
+        NamedNodeMap nnm = n1.getAttributes();
+        String code = nnm.getNamedItem("CODE").getTextContent();
+        if (!divisions.containsKey(code)) {
+          Division division = new Division();
+          division.setCode(code);
+          NodeList nl2 = n1.getChildNodes();
+          for (int j = 0; j < nl2.getLength(); j++) {
+            Node n2 = nl2.item(j);
+            if (n2.getNodeType() == Node.ELEMENT_NODE) {
+              switch (n2.getNodeName()) {
+                case "LIBELLE_LONG":
+                  division.setLibelle(n2.getTextContent());
+                  break;
+                //// LIAISON VERS NIVEAU ////
+                case "MEFS_APPARTENANCE":
+
+                  NodeList nl3 = n2.getChildNodes();
+                  for (int k = 0; k < nl3.getLength(); k++) {
+                    Node n3 = nl3.item(k);
+                    if (n3.getNodeType() == Node.ELEMENT_NODE) {
+                      NamedNodeMap nnm2 = n3.getAttributes();
+                      String codeMEF = nnm2.getNamedItem("CODE").getTextContent();
+                      //System.out.println(codeMEF);
+                      XPathExpression expr2 = xPath.compile("/STS_EDT/NOMENCLATURES/MEFS/MEF[@CODE='" + codeMEF + "']/*");
+                      NodeList nl4 = (NodeList) expr2.evaluate(document, XPathConstants.NODESET);
+                      for (int l = 0; l < nl4.getLength(); l++) {
+                        Node n4 = nl4.item(l);
+                        if (n4.getNodeType() == Node.ELEMENT_NODE) {
+                          String nodeName = n4.getNodeName();
+                          if (nodeName.equals("MEFSTAT4")) {
+                            // On en prend 1 car tous les items ont le même niveau
+                            String codeMEFSTAT4 = n4.getTextContent();
+                            division.setNiveau(dicoNiveaux.get(codeMEFSTAT4));
+                            break;
+                          }
                         }
+                      }
                     }
-                    niveaux.put(niveau.getCode(),niveau);
-                }
+                  }
+                  break;
+              }
             }
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
+          }
+          divisions.put(code, division);
         }
-        return niveaux;
+      }
     }
+    return divisions;
+  }
 
-    private Map<String,Individu> parseIndividus(){
-        final String xPathIndividus = "/STS_EDT/DONNEES/INDIVIDUS/*";
-        Map<String,Individu> individus = new HashMap<>();
-        try {
-            XPathExpression expression = xPath.compile(xPathIndividus);
-            NodeList nl1 = (NodeList) expression.evaluate(expression, XPathConstants.NODESET);
-            for (int i = 0; i < nl1.getLength() ; i++){
-                Node n1 = nl1.item(i);
-                if(n1.getNodeType() == Node.ELEMENT_NODE){
+  private Map<String, Individu> buildIndividu() throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+    final String xPathIndividus = "/STS_EDT/DONNEES/INDIVIDUS/*";
 
-                }
-            }
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }
-        return individus;
-    }
+    Map<String, Individu> individus = new HashMap<>();
 
-    private Map<String,Discipline> parseDisciplines(){
-        final String xPathDisciplines = "/STS_EDT/DONNEES/INDIVIDUS/*/DISCIPLINES/*";
-        Map<String,Discipline> disciplines = new HashMap<>();
-        try {
-            XPathExpression expression = xPath.compile(xPathDisciplines);
-            NodeList nl1 = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
-            for(int i = 0 ; i < nl1.getLength() ; i++){
-                Node n1 = nl1.item(i);
-                Discipline discipline = new Discipline();
-                if(n1.getNodeType() == Node.ELEMENT_NODE){
-                    NamedNodeMap nnm = n1.getAttributes();
-                    discipline.setCode(nnm.getNamedItem("CODE").getTextContent());
-                    NodeList nl2 = n1.getChildNodes();
-                    for(int j = 0 ; j < nl2.getLength() ; j++){
-                        Node n2 = nl2.item(j);
-                        if(n2.getNodeType() == Node.ELEMENT_NODE){
-                            switch (n2.getNodeName()){
-                                case "LIBELLE_COURT":
-                                    discipline.setLibelle(n2.getTextContent());
-                                    break;
-                            }
-                        }
+    XPathExpression expression = xPath.compile(xPathIndividus);
+    NodeList nl1 = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+    for (int i = 0; i < nl1.getLength(); i++) {
+      //List<Discipline> lstDis = new ArrayList<>();
+      //List<Division> lstDiv = new ArrayList<>();
+      Node n1 = nl1.item(i);
+      if (n1.getNodeType() == Node.ELEMENT_NODE) {
+        NamedNodeMap nnm = n1.getAttributes();
+        String id = nnm.getNamedItem("ID").getTextContent();
+        //individu.setId(Long.parseLong(id));
+        String type = nnm.getNamedItem("TYPE").getTextContent();
+        if (!individus.containsKey(id)) {
+          Individu individu = new Individu();
+          // TODO à vérifier le sens de ID == CodeSynchro ??
+          individu.setCodeSynchro(id);
+          NodeList nl2 = n1.getChildNodes();
+          for (int j = 0; j < nl2.getLength(); j++) {
+            Node n2 = nl2.item(j);
+            if (n2.getNodeType() == Node.ELEMENT_NODE) {
+              switch (n2.getNodeName()) {
+                case "NOM_USAGE":
+                  individu.setNom(n2.getTextContent());
+                  break;
+                case "PRENOM":
+                  individu.setPrenom(n2.getTextContent());
+                  break;
+                case "CIVILITE":
+                  individu.setCivilite(n2.getTextContent());
+                  break;
+                case "DATE_NAISSANCE":
+                  //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd");
+                  String date = n2.getTextContent();
+                  LocalDate localDate = LocalDate.parse(date);
+                  individu.setNaissance(localDate);
+                  break;
+                case "DISCIPLINES":
+                  //// LIASON VERS DISCIPLINE ////
+
+                  //if (type.equals("epp")) {
+                  NodeList nl3 = n2.getChildNodes();
+                  for (int k = 0; k < nl3.getLength(); k++) {
+                    Node n3 = nl3.item(k);
+                    if (n3.getNodeType() == Node.ELEMENT_NODE) {
+                      NamedNodeMap nnm2 = n3.getAttributes();
+                      String codeDis = nnm2.getNamedItem("CODE").getTextContent();
+                      individu.addDiscipline(dicoDisciplines.get(codeDis));
 
                     }
+                  }
+                  break;
+              }
+              //// FIN LIAISON VERS DISCIPLINE ////
+              //// LIAISON VERS DIVISION ////
+              XPathExpression expr2 = xPath.compile("/STS_EDT/DONNEES/STRUCTURE/DIVISIONS/*/SERVICES/*/ENSEIGNANTS/*");
+              NodeList nl3 = (NodeList) expr2.evaluate(document, XPathConstants.NODESET);
+              for (int k = 0; k < nl3.getLength(); k++) {
+                Node n3 = nl3.item(k);
+                if (n3.getNodeType() == Node.ELEMENT_NODE) {
+                  NamedNodeMap nnm2 = n3.getAttributes();
+                  String idEns = nnm2.getNamedItem("ID").getTextContent();
+                  if (idEns.equals(id)) {
+                    // On remonte pour récupérer le code de la division
+                    Node n4 = n3.getParentNode().getParentNode().getParentNode().getParentNode();
+                    NamedNodeMap nnm3 = n4.getAttributes();
+                    String codeDiv = nnm3.getNamedItem("CODE").getTextContent();
+                    //System.out.println(id+" => "+codeDiv);
+                    //lstDiv.add(dicoDivisions.get(codeDiv));
+                    individu.addDivision(dicoDivisions.get(codeDiv));
+                  }
                 }
-                disciplines.put(discipline.getCode(),discipline);
+              }
             }
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
+          }
+          individus.put(id, individu);
         }
-        return disciplines;
+      }
     }
+    return individus;
+  }
 
-    private Map<String,Division> parseDivisions(){
-        final String xPathDivisions = "/STS_EDT/DONNEES/STRUCTURE/DIVISIONS/*";
-        Map<String,Division> divisions = new HashMap<>();
-        try {
-            XPathExpression expression = xPath.compile(xPathDivisions);
-            NodeList nl1 = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
-            for(int i = 0; i < nl1.getLength() ; i++){
-                Node n1 = nl1.item(i);
-                Division division = new Division();
-                if(n1.getNodeType() == Node.ELEMENT_NODE){
-                    NamedNodeMap nnm = n1.getAttributes();
-                    division.setCode(nnm.getNamedItem("CODE").getTextContent());
-                    NodeList nl2 = n1.getChildNodes();
-                    for(int j = 0 ; j < nl2.getLength() ; j++){
-                        Node n2 = nl2.item(j);
-                        if(n2.getNodeType() == Node.ELEMENT_NODE){
-                            switch (n2.getNodeName()){
-                                case "LIBELLE_LONG":
-                                    division.setLibelle(n2.getTextContent());
-                                    break;
-                                case "MEFS_APPARTENANCE":
-                                    break;
-                            }
-                        }
-                    }
-                }
-                divisions.put(division.getCode(),division);
+  private Map<String, Discipline> buildDiscipline() throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+    final String xPathDisciplines = "/STS_EDT/DONNEES/INDIVIDUS/*/DISCIPLINES/*";
+
+    Map<String, Discipline> disciplines = new HashMap<>();
+
+    XPathExpression expression = xPath.compile(xPathDisciplines);
+    NodeList nl1 = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
+    for (int i = 0; i < nl1.getLength(); i++) {
+      //List<Individu> lstProfs = new ArrayList<>();
+      Node n1 = nl1.item(i);
+      if (n1.getNodeType() == Node.ELEMENT_NODE) {
+        NamedNodeMap nnm = n1.getAttributes();
+        String code = nnm.getNamedItem("CODE").getTextContent();
+        if (!disciplines.containsKey(code)) {
+          Discipline discipline = new Discipline();
+          discipline.setCode(code);
+          NodeList nl2 = n1.getChildNodes();
+          for (int j = 0; j < nl2.getLength(); j++) {
+            Node n2 = nl2.item(j);
+            if (n2.getNodeType() == Node.ELEMENT_NODE) {
+              switch (n2.getNodeName()) {
+                case "LIBELLE_COURT":
+                  discipline.setLibelle(n2.getTextContent());
+                  break;
+              }
             }
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
+          }
+          disciplines.put(discipline.getCode(), discipline);
         }
-        return divisions;
+      }
     }
-
-
-
-
+    return disciplines;
+  }
 }
-
-

@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface DisciplineRepository extends CrudRepository<Discipline, Long> {
 
+   public Discipline findByCode(String code);
+
 }

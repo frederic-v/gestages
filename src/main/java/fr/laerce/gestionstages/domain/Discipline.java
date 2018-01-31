@@ -60,23 +60,23 @@ public class Discipline {
         this.libelle = libelle;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Discipline that = (Discipline) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getCode(), that.getCode()) &&
-                Objects.equals(getLibelle(), that.getLibelle());
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Discipline that = (Discipline) o;
+    return Objects.equals(code, that.code) &&
+            Objects.equals(libelle, that.libelle);
+  }
 
-    @Override
-    public int hashCode() {
+  @Override
+  public int hashCode() {
 
-        return Objects.hash(getId(), getCode(), getLibelle());
-    }
+    return Objects.hash(code, libelle);
+  }
 
-    @Override
+
+  @Override
     public String toString() {
         return "Discipline{" +
                 "id=" + id +

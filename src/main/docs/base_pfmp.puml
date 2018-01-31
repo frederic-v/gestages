@@ -58,9 +58,10 @@ class Discipline << Entity >> {
 }
 
 hide circle
-Individu "0..*" --- "profs *" Division
-Individu " profs *" --- "0..1" Discipline
-Division "0..*" --- "0..1" Niveau
+hide methods
+Individu "0..*" ---> "*" Division
+Individu " profs *" ---> "0..* " Discipline
+Division "0..*" ---> "0..1" Niveau
 Individu "0..1" --- "0..1" Utilisateur
 
 

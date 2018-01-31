@@ -1,7 +1,5 @@
 package fr.laerce.gestionstages;
 
-import fr.laerce.gestionstages.service.ImportFromSTSBis;
-import fr.laerce.gestionstages.service.GSImportSTSException;
 
 /**
  * Projet gestionstages
@@ -19,12 +17,6 @@ public class ExperienceXml {
   }
 
   public void run() {
-    try {
-      ImportFromSTSBis importFromSTS = new ImportFromSTSBis();
-      importFromSTS.parse("/home/kpu/download/sts_emp_0940321S_2017.xml");
-      System.out.println("Nb de niveaux = " + importFromSTS.getDicoNiveaux().size());
-    } catch (GSImportSTSException e) {
-      System.out.println("ERREUR = " + e.getMessage());
-    }
+
   }
 }
