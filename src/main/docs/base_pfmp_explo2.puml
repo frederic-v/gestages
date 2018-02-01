@@ -58,13 +58,8 @@ class Discipline << Entity >> {
 
 class Stagiaire << Entitiy >> {
    - id
-   - civilite
-   - nom
-   - prenom
-   - naissance
-   - mail
-   - telephoneFixe
-   - telephoneMobile
+   - dateDebut
+   - dateFin
    + getters() et setters()
    + equals()
    + hashCode()
@@ -73,6 +68,8 @@ class Stagiaire << Entitiy >> {
 
 class Stage << Entitiy >> {
    - id
+   - dateDebut
+   - dateFin
    + getters() et setters()
    + equals()
    + hashCode()
@@ -114,20 +111,17 @@ class Template << Entitiy >> {
 hide circle
 hide methods
 
+Individu  "*" -left--- "*" Stage
+(Individu, Stage) .. Stagiaire
+
 Individu "0..1" --- "0..1" Utilisateur
 Individu "*" ---> "*" Division
-Individu " *   " ---> "*" Discipline
+Individu " *   " ---> " * " Discipline
 Division "0..*" --- "0..1" Niveau
-
-Stagiaire "0..*" --- "0..1" Division
-Stagiaire "0..*" --- "0..1" Stage
-Individu "0..1" --- "0..*" Stage : référent
-Individu "0..1" --- "0..*" Stage : suivi
-Entreprise "0..1" --- "0..n" Stage
-Employe "0..*" --- "0..1" Entreprise
-Employe "0..1" --- "0..*" Stage : responsable
-Employe "0..1" --- "0..*" Stage : tuteur
-Visite "0..*" --- "0..1" Stage
+Visite "0..*" --- "1 " Stage
 Visite "0..*" --- "0..1" Individu
-
+Stagiaire "*" --- "tuteur 1" Employe
+Employe "0..*" --- "0..1" Entreprise
+Stage "*" --- "1 responsable" Entreprise
+Stage "*" -left--- "1 referent" Individu
 @enduml
