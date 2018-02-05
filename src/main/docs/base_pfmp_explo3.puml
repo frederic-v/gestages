@@ -72,15 +72,6 @@ class Discipline << Entity >> {
    + toString()
 }
 
-class Stagiaire << Entitiy >> {
-   - id
-   - dateDebut
-   - dateFin
-   + getters() et setters()
-   + equals()
-   + hashCode()
-   + toString()
-}
 
 class Stage << Entitiy >> {
    - id
@@ -111,32 +102,18 @@ class Visite << Entitiy >> {
 
 hide circle
 hide methods
-Eleve  "*" -left--- "*" Stage
+Eleve  "*" -- "*" Stage
 
-(Eleve, Stage) .. Stagiaire
-Stage "*" -right--- "   1 referent" Professeur : "                "
-Stagiaire "*" -right--- "tuteur 1" Professionnel : "                 "
-Stage "*" -right--- "responsable 1" Professionnel
+Stage "*" -left-- "1 referent" Professeur : "                  "
+Stage "*" -- "1 suivi" Professeur : "   "
+Stage "*" -right--- "responsable 1" Professionnel :"                        "
+Stage "*" -- "1 tuteur" Professionnel:"  "
+Stage "*" -- "1 lieu" Entreprise:"  "
 Stage "1" -- "*" Visite
 Professeur "1" -- "*" Visite
-Professeur " *   " --- " * " Discipline
+Professeur " *   " -- " * " Discipline
 Division "0..*" -- "0..1" Niveau
 Eleve "*" -- "*" Division
 Professionnel "0..*" -- "0..1" Entreprise
 @enduml
 
-
-Eleve "*" --- "*" Division
-Professeur " *   " --- " * " Discipline
-hide circle
-hide methods
-Eleve  "*" -left--- "*" Stage
-Individu <|-- Eleve
-(Eleve, Stage) .. Stagiaire
-Individu <|-- Professeur
-Individu <|-- Professionnel
-Stage "*" -right--- "   1 referent" Professeur : "                "
-Stagiaire "*" -right--- "tuteur 1" Professionnel : "                 "
-Stage "*" -right--- "responsable 1" Professionnel
-Stage "1" -- "0..*" Visite
-Professeur "0..1" -- "0..*" Visite
