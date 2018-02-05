@@ -2,6 +2,8 @@
 
 class Individu << Entity >> {
   - id: Bigint
+  - login : String
+  - mdp : String
   - nom: String
   - prenom: String
   - civilite: String
@@ -15,10 +17,24 @@ class Individu << Entity >> {
   + toString()
 }
 
-class Utilisateur << Entity >> {
-   -id: Bigint
-   -login: String
-   -mdp : String
+
+class Eleve << Entity >> {
+   + getters() et setters()
+   + equals()
+   + hashCode()
+   + toString()
+}
+
+
+class Professeur << Entity >> {
+   + getters() et setters()
+   + equals()
+   + hashCode()
+   + toString()
+}
+
+
+class Professionnel << Entity >> {
    + getters() et setters()
    + equals()
    + hashCode()
@@ -84,14 +100,6 @@ class Entreprise << Entitiy >> {
    + toString()
 }
 
-class Employe << Entitiy >> {
-   - id
-   + getters() et setters()
-   + equals()
-   + hashCode()
-   + toString()
-}
-
 class Visite << Entitiy >> {
    - id
    + getters() et setters()
@@ -100,28 +108,35 @@ class Visite << Entitiy >> {
    + toString()
 }
 
-class Template << Entitiy >> {
-   - id
-   + getters() et setters()
-   + equals()
-   + hashCode()
-   + toString()
-}
 
 hide circle
 hide methods
+Eleve  "*" -left--- "*" Stage
 
-Individu  "*" -left--- "*" Stage
-(Individu, Stage) .. Stagiaire
-
-Individu "0..1" --- "0..1" Utilisateur
-Individu "*" --- "*" Division
-Individu " *   " --- " * " Discipline
-Division "0..*" --- "0..1" Niveau
-Visite "0..*" --- "1 " Stage
-Visite "0..*" --- "0..1" Individu
-Stagiaire "*" --- "tuteur 1" Employe
-Employe "0..*" --- "0..1" Entreprise
-Stage "*" --- "1 responsable" Entreprise
-Stage "*" -left--- "1 referent" Individu
+(Eleve, Stage) .. Stagiaire
+Stage "*" -right--- "   1 referent" Professeur : "                "
+Stagiaire "*" -right--- "tuteur 1" Professionnel : "                 "
+Stage "*" -right--- "responsable 1" Professionnel
+Stage "1" -- "*" Visite
+Professeur "1" -- "*" Visite
+Professeur " *   " --- " * " Discipline
+Division "0..*" -- "0..1" Niveau
+Eleve "*" -- "*" Division
+Professionnel "0..*" -- "0..1" Entreprise
 @enduml
+
+
+Eleve "*" --- "*" Division
+Professeur " *   " --- " * " Discipline
+hide circle
+hide methods
+Eleve  "*" -left--- "*" Stage
+Individu <|-- Eleve
+(Eleve, Stage) .. Stagiaire
+Individu <|-- Professeur
+Individu <|-- Professionnel
+Stage "*" -right--- "   1 referent" Professeur : "                "
+Stagiaire "*" -right--- "tuteur 1" Professionnel : "                 "
+Stage "*" -right--- "responsable 1" Professionnel
+Stage "1" -- "0..*" Visite
+Professeur "0..1" -- "0..*" Visite
