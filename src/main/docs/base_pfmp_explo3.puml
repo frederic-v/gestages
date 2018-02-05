@@ -102,18 +102,21 @@ class Visite << Entitiy >> {
 
 hide circle
 hide methods
-Eleve  "*" -- "*" Stage
-
+Eleve "1" -- "*" Stage
+Eleve "*" -- " * " Division
 Stage "*" -left-- "1 referent" Professeur : "                  "
 Stage "*" -- "1 suivi" Professeur : "   "
-Stage "*" -right--- "responsable 1" Professionnel :"                        "
-Stage "*" -- "1 tuteur" Professionnel:"  "
+Stage "*" -- "responsable 1" Professionnel
+Stage "*" -- "1 tuteur" Professionnel:"    "
 Stage "*" -- "1 lieu" Entreprise:"  "
-Stage "1" -- "*" Visite
+Stage "1  " -- "*" Visite
 Professeur "1" -- "*" Visite
-Professeur " *   " -- " * " Discipline
-Division "0..*" -- "0..1" Niveau
-Eleve "*" -- "*" Division
+Professeur " * " -- " * " Discipline
+Division "*" -- "0..1" Niveau
 Professionnel "0..*" -- "0..1" Entreprise
+Division " *  " -- "*" Stage
+Individu <|-- Eleve
+Individu <|-- Professeur
+Individu <|-- Professionnel
 @enduml
 

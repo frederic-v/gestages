@@ -125,26 +125,26 @@ class Template << Entitiy >> {
 hide circle
 hide methods
 
-Individu "0..1" --- "0..1" Utilisateur
-Professeur "*" ---> "*" Division
-Professeur " *   " ---> "*" Discipline
-Division "0..*" --- "0..1" Niveau
-Division "*" --- "*" Stage
+Individu "0..1" -- "0..1" Utilisateur
+Professeur "*" --> "*" Division
+Professeur " *   " --> "*" Discipline
+Division "0..*" -- "0..1" Niveau
+Division "*" -- "*" Stage
 
 
-Individu <|--- Professeur
-Stagiaire ---|> Individu
-Employe ---|> Individu
+Individu <|-- Professeur
+Stagiaire --|> Individu
+Employe --|> Individu
 
-Stagiaire "0..*" --- "0..1" Division
-Stagiaire "0..*" --- "0..1" Stage
-Professeur "0..1" --- "0..*" Stage : référent
-Professeur "0..1" --- "0..*" Stage : suivi
-Entreprise "0..1" --- "0..n" Stage
-Employe "0..*" --- "0..1" Entreprise
-Employe "0..1" --- "0..*" Stage : responsable
-Employe "0..1" --- "0..*" Stage : tuteur
-Visite "0..*" --- "0..1" Stage
-Visite "0..*" --- "0..1" Individu
+Stagiaire "0..*" -- "0..1" Division
+Stagiaire "0..*" -- "0..1" Stage
+Professeur "0..1" -- "0..*" Stage : référent
+Professeur "0..1" -- "0..*" Stage : suivi
+Entreprise "0..1" -- "0..n" Stage
+Employe "0..*" -- "0..1" Entreprise
+Employe "0..1" -- "0..*" Stage : responsable
+Employe "0..1" -- "0..*" Stage : tuteur
+Visite "0..*" -- "0..1" Stage
+Visite "0..*" -- "0..1" Individu
 
 @enduml
