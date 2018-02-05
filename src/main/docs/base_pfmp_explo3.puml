@@ -107,13 +107,13 @@ Eleve "*" -- " * " Division
 Stage "*" -left-- "1 referent" Professeur : "                  "
 Stage "*" -- "1 suivi" Professeur : "   "
 Stage "*" -- "responsable 1" Professionnel
-Stage "*" -- "1 tuteur" Professionnel:"    "
+Stage "*" -- "1 tuteur" Professionnel
 Stage "*" -- "1 lieu" Entreprise:"  "
 Stage "1  " -- "*" Visite
-Professeur "1" -- "*" Visite
+Professeur "1" -- " *  " Visite
 Professeur " * " -- " * " Discipline
 Division "*" -- "0..1" Niveau
-Professionnel "0..*" -- "0..1" Entreprise
+Professionnel "0..*" -left-- "0..1" Entreprise:"                 "
 Division " *  " -- "*" Stage
 Individu <|-- Eleve
 Individu <|-- Professeur
