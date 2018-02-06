@@ -1,7 +1,14 @@
 package fr.laerce.gestionstages.web;
 
+
 import fr.laerce.gestionstages.dao.DisciplineRepository;
+import fr.laerce.gestionstages.dao.DivisionRepository;
+import fr.laerce.gestionstages.dao.IndividuRepository;
+import fr.laerce.gestionstages.dao.NiveauReposiroty;
 import fr.laerce.gestionstages.domain.Discipline;
+import fr.laerce.gestionstages.domain.Division;
+import fr.laerce.gestionstages.domain.Individu;
+import fr.laerce.gestionstages.domain.Niveau;
 import fr.laerce.gestionstages.service.ImportFromSTS;
 import fr.laerce.gestionstages.service.ImportSTSException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +30,22 @@ public class AdminController {
   @Autowired
   private DisciplineRepository repoDiscipline;
 
+  @Autowired
+  private NiveauReposiroty repoNiveau;
+
+  @Autowired
+  private DivisionRepository repoDivision;
+
+  @Autowired
+  private IndividuRepository repoIndividu;
+
   private ImportFromSTS importFromSTS;
 
   @Autowired
   public void setImportFromSTS(ImportFromSTS importFromSTS) {
     this.importFromSTS = importFromSTS;
     try {
-      this.importFromSTS.parse("/home/kpu/download/sts_emp_0940321S_2017.xml");
+      this.importFromSTS.parse("/Users/fred/files/sts_emp_0940321S_2017.xml");
     } catch (ImportSTSException e) {
 
       errorServiceImport = e.getMessage();
@@ -70,6 +86,54 @@ public class AdminController {
       } else {
         repoDiscipline.save(disciplineImported);
       }
+    }
+
+    for(String code : importFromSTS.getDicoNiveaux().keySet()){
+        Niveau niveauManaged = repoNiveau.findByCode(code);
+        Niveau niveauImported = importFromSTS.getDicoNiveaux().get(code);
+
+        if(niveauManaged != null){
+            if(!niveauManaged.equals(niveauImported)){
+
+            }
+            niveauManaged.setLibelleCourt(niveauImported.getLibelleCourt());
+            niveauManaged.setLibelleLong(niveauImported.getLibelleLong());
+            repoNiveau.save(niveauManaged);
+        } else {
+            repoNiveau.save(niveauImported);
+        }
+    }
+
+    for(String code : importFromSTS.getDicoDivisions().keySet()){
+        Division divisionManaged = repoDivision.findByCode(code);
+        Division divisionImported = importFromSTS.getDicoDivisions().get(code);
+
+        if(divisionManaged != null){
+            divisionManaged.setLibelle(divisionImported.getLibelle());
+            repoDivision.save(divisionManaged);
+        } else {
+            Niveau niveau = repoNiveau.findByCode(divisionImported.getNiveau().getCode());
+            divisionImported.setNiveau(niveau);
+            repoDivision.save(divisionImported);
+        }
+    }
+
+    for(String code : importFromSTS.getDicoIndividus().keySet()){
+        Individu individuManaged = repoIndividu.findByCodeSynchro(code);
+        Individu individuImported = importFromSTS.getDicoIndividus().get(code);
+
+        if(individuManaged != null){
+
+        } else {
+            for(Discipline discipline: individuImported.getDisciplines()){
+                Discipline discipline1 = repoDiscipline.findByCode(discipline.getCode());
+                discipline = discipline1;
+            }
+            for(Division division: individuImported.getDivisions()){
+
+            }
+            repoIndividu.save(individuImported);
+        }
     }
   }
 

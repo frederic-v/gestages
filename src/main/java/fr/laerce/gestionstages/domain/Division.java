@@ -13,10 +13,12 @@ import java.util.Objects;
  * @author fred
  */
 @Entity
-public class Division {
+public class Division implements Cloneable{
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false)
     private Long id;
-    @Column
+    @Column(unique = true)
     private String code;
     @Column
     private String libelle;

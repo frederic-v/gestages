@@ -1,7 +1,7 @@
 package fr.laerce.gestionstages.configuration;
 
 import fr.laerce.gestionstages.service.ImportFromSTS;
-import fr.laerce.gestionstages.service.ImportFromSTSOld;
+
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 

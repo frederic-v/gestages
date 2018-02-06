@@ -2,9 +2,7 @@ package fr.laerce.gestionstages.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Projet pfmp-base
@@ -15,7 +13,7 @@ import java.util.Objects;
  * @author fred
  */
 @Entity
-public class Individu {
+public class Individu implements Cloneable{
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(nullable = false)
@@ -43,22 +41,22 @@ public class Individu {
   private Utilisateur utilisateur;
 
   @ManyToMany
-  private List<Division> divisions;
+  private Set<Division> divisions;
 
   @ManyToMany
-  private List<Discipline> disciplines;
+  private Set<Discipline> disciplines;
 
 
   public Individu(){
-    this.divisions = new ArrayList<>();
-    this.disciplines = new ArrayList<>();
+    this.divisions = new HashSet<>();
+    this.disciplines = new HashSet<>();
   }
 
-  public List<Discipline> getDisciplines() {
+  public Set<Discipline> getDisciplines() {
     return disciplines;
   }
 
-  public void setDisciplines(List<Discipline> disciplines) {
+  public void setDisciplines(Set<Discipline> disciplines) {
     this.disciplines = disciplines;
   }
 
@@ -72,11 +70,11 @@ public class Individu {
   }
 
 
-  public List<Division> getDivisions() {
+  public Set<Division> getDivisions() {
     return divisions;
   }
 
-  public void setDivisions(List<Division> divisions) {
+  public void setDivisions(Set<Division> divisions) {
     this.divisions = divisions;
   }
 
