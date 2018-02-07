@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Entity
-@Table(name = "niveau")
 public class Niveau {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,7 +2,9 @@ package fr.laerce.gestionstages.domain;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * Projet pfmp-base
@@ -13,190 +15,143 @@ import java.util.*;
  * @author fred
  */
 @Entity
-public class Individu implements Cloneable{
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(nullable = false)
-  private Long id;
-  @Column
-  private String nom;
-  @Column
-  private String prenom;
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public class Individu implements Cloneable {
 
-  @Column(nullable = false)
-  String civilite;
-
-  @Column
-  private LocalDate naissance;
-  @Column
-  private String codeSynchro;
-  @Column
-  private String telephoneMobile;
-  @Column
-  private String telephoneFixe;
-  @Column
-  private String email;
-
-  @OneToOne(mappedBy = "individu")
-  private Utilisateur utilisateur;
-
-  @ManyToMany
-  private Set<Division> divisions;
-
-  @ManyToMany
-  private Set<Discipline> disciplines;
+    @Column(nullable = false)
+    String civilite;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(nullable = false)
+    private Long id;
+    @Column
+    private String nom;
+    @Column
+    private String prenom;
+    @Column
+    private String codeSynchro;
+    @Column
+    private String telephoneMobile;
+    @Column
+    private String telephoneFixe;
+    @Column
+    private String email;
+    @Column(unique = true)
+    private String login;
+    @Column
+    private String mdp;
+    @Column
+    private String mdpOrigine;
 
 
-  public Individu(){
-    this.divisions = new HashSet<>();
-    this.disciplines = new HashSet<>();
-  }
 
-  public Set<Discipline> getDisciplines() {
-    return disciplines;
-  }
 
-  public void setDisciplines(Set<Discipline> disciplines) {
-    this.disciplines = disciplines;
-  }
-
-  public void addDiscipline(Discipline discipline) {
-    if (this.disciplines != null) {
-      this.disciplines.remove(discipline);
+    public Individu() {
     }
-    this.disciplines.add(discipline);
-    // gestion du lien inverse
-    discipline.addProfesseur(this);
-  }
 
 
-  public Set<Division> getDivisions() {
-    return divisions;
-  }
-
-  public void setDivisions(Set<Division> divisions) {
-    this.divisions = divisions;
-  }
-
-  public Utilisateur getUtilisateur() {
-    return utilisateur;
-  }
-
-  public void setUtilisateur(Utilisateur utilisateur) {
-    this.utilisateur = utilisateur;
-  }
 
 
-  public Long getId() {
-    return id;
-  }
+    public Long getId() {
+        return id;
+    }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-  public String getNom() {
-    return nom;
-  }
+    public String getNom() {
+        return nom;
+    }
 
-  public void setNom(String nom) {
-    this.nom = nom;
-  }
+    public void setNom(String nom) {
+        this.nom = nom;
+    }
 
-  public String getPrenom() {
-    return prenom;
-  }
+    public String getPrenom() {
+        return prenom;
+    }
 
-  public void setPrenom(String prenom) {
-    this.prenom = prenom;
-  }
-
-  public LocalDate getNaissance() {
-    return naissance;
-  }
-
-  public void setNaissance(LocalDate naissance) {
-    this.naissance = naissance;
-  }
-
-  public String getCodeSynchro() {
-    return codeSynchro;
-  }
-
-  public void setCodeSynchro(String codeSynchro) {
-    this.codeSynchro = codeSynchro;
-  }
-
-  public String getTelephoneMobile() {
-    return telephoneMobile;
-  }
-
-  public void setTelephoneMobile(String telephoneMobile) {
-    this.telephoneMobile = telephoneMobile;
-  }
-
-  public String getTelephoneFixe() {
-    return telephoneFixe;
-  }
-
-  public void setTelephoneFixe(String telephoneFixe) {
-    this.telephoneFixe = telephoneFixe;
-  }
-
-  public String getEmail() {
-    return email;
-  }
-
-  public void setEmail(String email) {
-    this.email = email;
-  }
-
-  public String getCivilite() {
-    return civilite;
-  }
-
-  public void setCivilite(String civilite) {
-    this.civilite = civilite;
-  }
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-    Individu that = (Individu) o;
-    return Objects.equals(getId(), that.getId()) &&
-            Objects.equals(getNom(), that.getNom()) &&
-            Objects.equals(getPrenom(), that.getPrenom()) &&
-            Objects.equals(getNaissance(), that.getNaissance()) &&
-            Objects.equals(getCodeSynchro(), that.getCodeSynchro()) &&
-            Objects.equals(getTelephoneMobile(), that.getTelephoneMobile()) &&
-            Objects.equals(getTelephoneFixe(), that.getTelephoneFixe()) &&
-            Objects.equals(getEmail(), that.getEmail());
-  }
+    public void setPrenom(String prenom) {
+        this.prenom = prenom;
+    }
 
 
-  public void addDivision(Division division) {
-    this.divisions.add(division);
-  }
+    public String getCodeSynchro() {
+        return codeSynchro;
+    }
 
-  @Override
-  public int hashCode() {
+    public void setCodeSynchro(String codeSynchro) {
+        this.codeSynchro = codeSynchro;
+    }
 
-    return Objects.hash(getId(), getNom(), getPrenom(), getNaissance(), getCodeSynchro(), getTelephoneMobile(), getTelephoneFixe(), getEmail());
-  }
+    public String getTelephoneMobile() {
+        return telephoneMobile;
+    }
 
-  @Override
-  public String toString() {
-    return "Individu{" +
-            "id=" + id +
-            ", nom='" + nom + '\'' +
-            ", prenom='" + prenom + '\'' +
-            ", naissance=" + naissance +
-            ", codeSynchro='" + codeSynchro + '\'' +
-            ", telephoneMobile='" + telephoneMobile + '\'' +
-            ", telephoneFixe='" + telephoneFixe + '\'' +
-            ", email='" + email + '\'' +
-            '}';
-  }
+    public void setTelephoneMobile(String telephoneMobile) {
+        this.telephoneMobile = telephoneMobile;
+    }
+
+    public String getTelephoneFixe() {
+        return telephoneFixe;
+    }
+
+    public void setTelephoneFixe(String telephoneFixe) {
+        this.telephoneFixe = telephoneFixe;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCivilite() {
+        return civilite;
+    }
+
+    public void setCivilite(String civilite) {
+        this.civilite = civilite;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Individu that = (Individu) o;
+        return Objects.equals(getId(), that.getId()) &&
+                Objects.equals(getNom(), that.getNom()) &&
+                Objects.equals(getPrenom(), that.getPrenom()) &&
+
+                Objects.equals(getCodeSynchro(), that.getCodeSynchro()) &&
+                Objects.equals(getTelephoneMobile(), that.getTelephoneMobile()) &&
+                Objects.equals(getTelephoneFixe(), that.getTelephoneFixe()) &&
+                Objects.equals(getEmail(), that.getEmail());
+    }
+
+
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(getId(), getNom(), getPrenom(),  getCodeSynchro(), getTelephoneMobile(), getTelephoneFixe(), getEmail());
+    }
+
+    @Override
+    public String toString() {
+        return "Individu{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+
+                ", codeSynchro='" + codeSynchro + '\'' +
+                ", telephoneMobile='" + telephoneMobile + '\'' +
+                ", telephoneFixe='" + telephoneFixe + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 
 }

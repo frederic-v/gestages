@@ -1,9 +1,6 @@
 package fr.laerce.gestionstages.service;
 
-import fr.laerce.gestionstages.domain.Discipline;
-import fr.laerce.gestionstages.domain.Division;
-import fr.laerce.gestionstages.domain.Individu;
-import fr.laerce.gestionstages.domain.Niveau;
+import fr.laerce.gestionstages.domain.*;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
@@ -29,13 +26,13 @@ public class ImportFromSTS {
 
   private Map<String, Niveau> dicoNiveaux;
   private Map<String, Division> dicoDivisions;
-  private Map<String, Individu> dicoIndividus;
+  private Map<String, Professeur> dicoIndividus;
   private Map<String, Discipline> dicoDisciplines;
 
   public ImportFromSTS() {
     dicoNiveaux = new HashMap<>();
     dicoDivisions = new HashMap<>();
-    dicoIndividus = new HashMap<>();
+    dicoIndividus = new HashMap<String, Professeur>();
     dicoDisciplines = new HashMap<>();
   }
 
@@ -70,7 +67,7 @@ public class ImportFromSTS {
     return dicoDivisions;
   }
 
-  public Map<String, Individu> getDicoIndividus() {
+  public Map<String, Professeur> getDicoIndividus() {
     return dicoIndividus;
   }
 
@@ -181,10 +178,10 @@ public class ImportFromSTS {
     return divisions;
   }
 
-  private Map<String, Individu> buildIndividu() throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
+  private Map<String, Professeur> buildIndividu() throws ParserConfigurationException, IOException, SAXException, XPathExpressionException {
     final String xPathIndividus = "/STS_EDT/DONNEES/INDIVIDUS/*";
 
-    Map<String, Individu> individus = new HashMap<>();
+    Map<String, Professeur> individus = new HashMap<>();
 
     XPathExpression expression = xPath.compile(xPathIndividus);
     NodeList nl1 = (NodeList) expression.evaluate(document, XPathConstants.NODESET);
@@ -198,7 +195,7 @@ public class ImportFromSTS {
         //individu.setId(Long.parseLong(id));
         String type = nnm.getNamedItem("TYPE").getTextContent();
         if (!individus.containsKey(id)) {
-          Individu individu = new Individu();
+          Professeur individu = new Professeur();
           // TODO à vérifier le sens de ID == CodeSynchro ??
           individu.setCodeSynchro(id);
           NodeList nl2 = n1.getChildNodes();
@@ -219,7 +216,7 @@ public class ImportFromSTS {
                   //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-mm-dd");
                   String date = n2.getTextContent();
                   LocalDate localDate = LocalDate.parse(date);
-                  individu.setNaissance(localDate);
+                  //individu.setNaissance(localDate);
                   break;
                 case "DISCIPLINES":
                   //// LIASON VERS DISCIPLINE ////

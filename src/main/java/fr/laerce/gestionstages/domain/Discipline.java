@@ -24,14 +24,14 @@ public class Discipline {
     private String libelle;
 
     @ManyToMany(mappedBy = "disciplines")
-    private List<Individu> professeurs = new ArrayList<Individu>();
+    private List<Professeur> professeurs = new ArrayList<Professeur>();
 
 
-    public List<Individu> getProfesseurs() {
+    public List<Professeur> getProfesseurs() {
         return professeurs;
     }
 
-    public void setProfesseurs(List<Individu> professeurs) {
+    public void setProfesseurs(List<Professeur> professeurs) {
         this.professeurs = professeurs;
     }
 
@@ -85,11 +85,11 @@ public class Discipline {
                 '}';
     }
 
-    public void addProfesseur(Individu individu) {
+    public void addProfesseur(Professeur individu) {
         this.getProfesseurs().add(individu);
     }
 
-    public void removeProfesseur(Individu individu) {
+    public void removeProfesseur(Professeur individu) {
         this.getProfesseurs().remove(individu);
     }
 }

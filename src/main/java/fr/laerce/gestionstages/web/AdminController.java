@@ -1,14 +1,8 @@
 package fr.laerce.gestionstages.web;
 
 
-import fr.laerce.gestionstages.dao.DisciplineRepository;
-import fr.laerce.gestionstages.dao.DivisionRepository;
-import fr.laerce.gestionstages.dao.IndividuRepository;
-import fr.laerce.gestionstages.dao.NiveauReposiroty;
-import fr.laerce.gestionstages.domain.Discipline;
-import fr.laerce.gestionstages.domain.Division;
-import fr.laerce.gestionstages.domain.Individu;
-import fr.laerce.gestionstages.domain.Niveau;
+import fr.laerce.gestionstages.dao.*;
+import fr.laerce.gestionstages.domain.*;
 import fr.laerce.gestionstages.service.ImportFromSTS;
 import fr.laerce.gestionstages.service.ImportSTSException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +31,7 @@ public class AdminController {
   private DivisionRepository repoDivision;
 
   @Autowired
-  private IndividuRepository repoIndividu;
+  private ProfesseurRepository repoIndividu;
 
   private ImportFromSTS importFromSTS;
 
@@ -119,8 +113,8 @@ public class AdminController {
     }
 
     for(String code : importFromSTS.getDicoIndividus().keySet()){
-        Individu individuManaged = repoIndividu.findByCodeSynchro(code);
-        Individu individuImported = importFromSTS.getDicoIndividus().get(code);
+        Professeur individuManaged = repoIndividu.findByCodeSynchro(code);
+        Professeur individuImported = importFromSTS.getDicoIndividus().get(code);
 
         if(individuManaged != null){
 
