@@ -15,7 +15,7 @@ import java.util.Set;
  * @author fred
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 public class Individu implements Cloneable {
 
     @Column(nullable = false)
@@ -37,7 +37,7 @@ public class Individu implements Cloneable {
     @Column
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String login;
     @Column
 
