@@ -167,12 +167,19 @@ public class AdminController {
   @GetMapping("/test")
   public String testCheck(Model model) {
     Professeur p1 = new Professeur();
-    //Eleve p1 = new Eleve();
-    p1.setCivilite("M.");
-    p1.setEmail("aze@rty");
-    p1.setLogin("login3");
-    //individuManager.saveEleveWithCheckUniqueLogin(p1);
-    individuManager.saveProfesseurWithCheckUniqueLogin(p1);
+    Eleve p2 = new Eleve();
+    try {
+      p1.setCivilite("M.");
+      p1.setEmail("aze@rty");
+      p1.setLogin("login4");
+      individuManager.saveProfesseurWithCheckUniqueLogin(p1);
+      p2.setCivilite("Me");
+      p2.setEmail("aze@error");
+      p2.setLogin("login4");
+      individuManager.saveEleveWithCheckUniqueLogin(p2);
+    } catch (Exception e) {
+      model.addAttribute("message", "Non enregistré : " + e.getMessage());
+    }
     model.addAttribute("individu", p1);
     return "testcheck";
   }
