@@ -37,13 +37,13 @@ public class Individu implements Cloneable {
     @Column
     private String email;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String login;
-    @Column
 
+    @Column
     private String mdp;
-    @Column
 
+    @Column
     private String mdpOrigine;
 
     public Individu() {
