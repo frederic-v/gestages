@@ -13,4 +13,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface IndividuRepository extends JpaRepository<Individu, Long>{
     public Individu findByCodeSynchro(String code);
+    public int countAllByLogin(String login);
+    public Individu findByLogin(String login);
 }

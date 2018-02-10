@@ -5,6 +5,7 @@ import fr.laerce.gestionstages.dao.*;
 import fr.laerce.gestionstages.domain.*;
 import fr.laerce.gestionstages.service.ImportFromSTS;
 import fr.laerce.gestionstages.service.ImportSTSException;
+import fr.laerce.gestionstages.service.IndividuManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,6 +21,9 @@ import java.util.Optional;
 public class AdminController {
 
   private String errorServiceImport;
+
+  @Autowired
+  IndividuManager individuManager;
 
   @Autowired
   private DisciplineRepository repoDiscipline;
@@ -39,7 +43,7 @@ public class AdminController {
   public void setImportFromSTS(ImportFromSTS importFromSTS) {
     this.importFromSTS = importFromSTS;
     try {
-      this.importFromSTS.parse("/Users/fred/files/sts_emp_0940321S_2017.xml");
+      this.importFromSTS.parse("/home/kpu/download/sts_emp_0940321S_2017.xml");
     } catch (ImportSTSException e) {
 
       errorServiceImport = e.getMessage();
@@ -158,4 +162,26 @@ public class AdminController {
     }
     return "redirect:/disciplines";
   }
+
+
+  @GetMapping("/test")
+  public String testCheck(Model model) {
+    Professeur p1 = new Professeur();
+    Eleve p2 = new Eleve();
+    try {
+      p1.setCivilite("M.");
+      p1.setEmail("aze@rty");
+      p1.setLogin("login4");
+      individuManager.saveProfesseurWithCheckUniqueLogin(p1);
+      p2.setCivilite("Me");
+      p2.setEmail("aze@error");
+      p2.setLogin("login4");
+      individuManager.saveEleveWithCheckUniqueLogin(p2);
+    } catch (Exception e) {
+      model.addAttribute("message", "Non enregistré : " + e.getMessage());
+    }
+    model.addAttribute("individu", p1);
+    return "testcheck";
+  }
+
 }
