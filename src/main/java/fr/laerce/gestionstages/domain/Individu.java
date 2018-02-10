@@ -36,21 +36,18 @@ public class Individu implements Cloneable {
     private String telephoneFixe;
     @Column
     private String email;
+
     @Column(unique = true)
     private String login;
     @Column
+
     private String mdp;
     @Column
+
     private String mdpOrigine;
-
-
-
 
     public Individu() {
     }
-
-
-
 
     public Long getId() {
         return id;
@@ -115,6 +112,30 @@ public class Individu implements Cloneable {
 
     public void setCivilite(String civilite) {
         this.civilite = civilite;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getMdp() {
+        return mdp;
+    }
+
+    public void setMdp(String mdp) {
+        this.mdp = mdp;
+    }
+
+    public String getMdpOrigine() {
+        return mdpOrigine;
+    }
+
+    public void setMdpOrigine(String mdpOrigine) {
+        this.mdpOrigine = mdpOrigine;
     }
 
     @Override

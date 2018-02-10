@@ -1,5 +1,7 @@
 package fr.laerce.gestionstages.domain;
 
+import org.hibernate.annotations.NaturalId;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +20,7 @@ public class Discipline {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name="code", length = 20, nullable = false, unique = true)
     private String code;
     @Column(name="libelle", length = 50)
