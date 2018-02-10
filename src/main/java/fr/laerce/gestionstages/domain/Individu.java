@@ -16,7 +16,7 @@ import java.util.Set;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Individu implements Cloneable {
+public abstract class Individu implements Cloneable {
 
     @Column(nullable = false)
     String civilite;
