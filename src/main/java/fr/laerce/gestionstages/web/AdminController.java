@@ -5,7 +5,6 @@ import fr.laerce.gestionstages.dao.*;
 import fr.laerce.gestionstages.domain.*;
 import fr.laerce.gestionstages.service.ImportFromSTS;
 import fr.laerce.gestionstages.service.ImportSTSException;
-import fr.laerce.gestionstages.service.IndividuManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,9 +22,6 @@ public class AdminController {
   private String errorServiceImport;
 
   @Autowired
-  IndividuManager individuManager;
-
-  @Autowired
   private DisciplineRepository repoDiscipline;
 
   @Autowired
@@ -35,7 +31,11 @@ public class AdminController {
   private DivisionRepository repoDivision;
 
   @Autowired
-  private ProfesseurRepository repoIndividu;
+  private ProfesseurRepository repoProfesseur;
+
+  @Autowired
+  private EleveRepository repoEleve;
+
 
   private ImportFromSTS importFromSTS;
 
@@ -117,7 +117,7 @@ public class AdminController {
     }
 
     for(String code : importFromSTS.getDicoIndividus().keySet()){
-        Professeur individuManaged = repoIndividu.findByCodeSynchro(code);
+        Professeur individuManaged = repoProfesseur.findByCodeSynchro(code);
         Professeur individuImported = importFromSTS.getDicoIndividus().get(code);
 
         if(individuManaged != null){
@@ -130,7 +130,7 @@ public class AdminController {
             for(Division division: individuImported.getDivisions()){
 
             }
-            repoIndividu.save(individuImported);
+            repoProfesseur.save(individuImported);
         }
     }
   }
@@ -171,12 +171,12 @@ public class AdminController {
     try {
       p1.setCivilite("M.");
       p1.setEmail("aze@rty");
-      p1.setLogin("login4");
-      individuManager.saveProfesseurWithCheckUniqueLogin(p1);
+      p1.setLogin("login5");
+      repoProfesseur .save(p1);
       p2.setCivilite("Me");
       p2.setEmail("aze@error");
-      p2.setLogin("login4");
-      individuManager.saveEleveWithCheckUniqueLogin(p2);
+      p2.setLogin("login6");
+      repoEleve.save(p2);
     } catch (Exception e) {
       model.addAttribute("message", "Non enregistré : " + e.getMessage());
     }

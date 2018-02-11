@@ -15,8 +15,8 @@ import java.util.Set;
  * @author fred
  */
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Individu implements Cloneable {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+public class Individu implements Cloneable {
 
     @Column(nullable = false)
     String civilite;
@@ -39,11 +39,12 @@ public abstract class Individu implements Cloneable {
 
     @Column(unique = true)
     private String login;
+
     @Column
 
     private String mdp;
-    @Column
 
+    @Column
     private String mdpOrigine;
 
     public Individu() {
