@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ImportFromSTS {
+public class ImportProfesseursFromSTS {
 
     @Autowired
     private DisciplineRepository repoDiscipline;
@@ -43,7 +43,6 @@ public class ImportFromSTS {
     @Autowired
     private EleveRepository repoEleve;
 
-
     private String fileName;
     private DocumentBuilder documentBuilder;
     private Document document;
@@ -54,11 +53,25 @@ public class ImportFromSTS {
     private Map<String, Professeur> dicoIndividus;
     private Map<String, Discipline> dicoDisciplines;
 
-    public ImportFromSTS() {
+    public ImportProfesseursFromSTS() {
         dicoNiveaux = new HashMap<>();
         dicoDivisions = new HashMap<>();
         dicoIndividus = new HashMap<>();
         dicoDisciplines = new HashMap<>();
+    }
+
+    /**
+     * Permet d'importer (mettre à jour ou création) les professeurs et les disciplines, divisions, niveaux et
+     *   auxquels ils sont attachés.
+     *
+     * @param fileName document XML au format STS (URL  vers la description
+     *                 de la structure XML STSWEB du SIECLE ?)
+     *
+     * @throws  ImportSTSException si le parse XML échoue
+     */
+    public void parseAndCreateUpdateIntoDatabase(String fileName) throws  ImportSTSException {
+        this.parse(fileName);
+        this.importIntoDataBase();
     }
 
     public void parse(String fileName) {
@@ -84,10 +97,6 @@ public class ImportFromSTS {
         }
     }
 
-    public void parseToDatabase(String fileName){
-        this.parse(fileName);
-        this.importIntoDataBase();
-    }
 
     private void importIntoDataBase() {
 
@@ -145,20 +154,24 @@ public class ImportFromSTS {
             Professeur individuImported = getDicoIndividus().get(code);
 
             if (individuManaged != null) {
-
+              // update ? pb de classes wrappers... il faut demander
+              // explicitement les instances aux dao (afin d'éviter une second insertion
+              // des objets de la collection ... voir si pas une autre solution ?)
+              for (Division division : individuImported.getDivisions()){
+                division = repoDivision.findByCode(division.getCode());
+                individuManaged.addDivision(division);
+              }
+              for (Discipline discipline : individuImported.getDisciplines()) {
+                discipline = repoDiscipline.findByCode(discipline.getCode());
+                individuManaged.addDiscipline(discipline);
+              }
+              // et plus...
+              repoProfesseur.save(individuManaged);
             } else {
-                for (Discipline discipline : individuImported.getDisciplines()) {
-                    Discipline discipline1 = repoDiscipline.findByCode(discipline.getCode());
-                    discipline = discipline1;
-                }
-                for (Division division : individuImported.getDivisions()) {
-
-                }
-                repoProfesseur.save(individuImported);
+              repoProfesseur.save(individuImported);
             }
         }
     }
-
 
 
     public Map<String, Niveau> getDicoNiveaux() {

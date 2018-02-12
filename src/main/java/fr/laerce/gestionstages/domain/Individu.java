@@ -41,7 +41,6 @@ public class Individu implements Cloneable {
     private String login;
 
     @Column
-
     private String mdp;
 
     @Column
@@ -139,30 +138,21 @@ public class Individu implements Cloneable {
         this.mdpOrigine = mdpOrigine;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Individu that = (Individu) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getNom(), that.getNom()) &&
-                Objects.equals(getPrenom(), that.getPrenom()) &&
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    Individu individu = (Individu) o;
+    return Objects.equals(codeSynchro, individu.codeSynchro);
+  }
 
-                Objects.equals(getCodeSynchro(), that.getCodeSynchro()) &&
-                Objects.equals(getTelephoneMobile(), that.getTelephoneMobile()) &&
-                Objects.equals(getTelephoneFixe(), that.getTelephoneFixe()) &&
-                Objects.equals(getEmail(), that.getEmail());
-    }
+  @Override
+  public int hashCode() {
 
+    return Objects.hash(codeSynchro);
+  }
 
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(getId(), getNom(), getPrenom(),  getCodeSynchro(), getTelephoneMobile(), getTelephoneFixe(), getEmail());
-    }
-
-    @Override
+  @Override
     public String toString() {
         return "Individu{" +
                 "id=" + id +

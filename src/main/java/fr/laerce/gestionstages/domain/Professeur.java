@@ -1,9 +1,6 @@
 package fr.laerce.gestionstages.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.MappedSuperclass;
+import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,12 +18,11 @@ public class Professeur extends Individu{
     @Column
     private String role;
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     private Set<Discipline> disciplines;
 
-    @ManyToMany
+    @ManyToMany(cascade=CascadeType.ALL)
     private Set<Division> divisions;
-
 
 
     public Professeur(){
