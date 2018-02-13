@@ -1,8 +1,9 @@
 package fr.laerce.gestionstages.domain;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 /**
  * Projet pfmp-base
@@ -24,6 +25,8 @@ public class Division implements Cloneable{
     private String libelle;
     @ManyToOne
     private Niveau niveau;
+    @ManyToMany(mappedBy = "divisions")
+    private Set<Professeur> professeurs;
 
     public Long getId() {
         return id;
@@ -55,6 +58,21 @@ public class Division implements Cloneable{
 
     public void setNiveau(Niveau niveau) {
         this.niveau = niveau;
+    }
+
+    public Set<Professeur> getProfesseurs() {
+        return professeurs;
+    }
+
+    public void setProfesseurs(Set<Professeur> divisions) {
+        this.professeurs = divisions;
+    }
+
+    public void addProfesseur(Professeur professeur){
+        if(this.professeurs == null){
+            professeurs = new HashSet<>();
+        }
+        professeurs.add(professeur);
     }
 
     @Override

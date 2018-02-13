@@ -21,7 +21,7 @@ public class Individu implements Cloneable {
     @Column(nullable = false)
     String civilite;
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
     @Column
