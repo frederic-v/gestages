@@ -1,0 +1,60 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:fragment="header-css">
+        <!-- this is header-css -->
+        <link rel="stylesheet" type="text/css"
+              href="/../webjars/bootstrap/4.0.0/css/bootstrap.css" />
+<!-- TODO main.css path ??? -->
+        <link rel="stylesheet" th:href="@{/css/main.css}"
+              href="../../static/css/main.css" />
+    </th:block>
+</head>
+<body>
+<div th:fragment="menu">
+    <!--
+    <nav class="navbar navbar-inverse">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" th:href="@{/}">Spring Boot</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a th:href="@{/}">Home</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    -->
+
+    <!-- Mettre le header ici -->
+    <div class="container p-3 px-md-4 mb-3 bg-white border-bottom">
+        <header class="blog-header py-3">
+            <div class="row flex-nowrap justify-content-between align-items-center">
+                <div class="col-1 pt-1">
+                    <!--<a class="text-muted" th:href="@{/}">Accueil</a>-->
+                    <!--<a class="btn btn-sm btn-outline-success text-center" th:href="@{/}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Accueil&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</a>-->
+                    <a class="btn btn-sm btn-outline-success text-center" th:href="@{/}">Accueil</a>
+                </div>
+                <div class="col-10 text-center mb-3">
+                    <h1 class="titlehead">Période de Formation en Milieu Professionel</h1>
+                </div>
+                <div class="col-1 d-flex justify-content-end align-items-center">
+                    <a class="btn btn-sm btn-outline-danger text-center" href="#">Déconnexion</a>
+                </div>
+            </div>
+        </header>
+
+        <div class="nav-scroller py-1 mb-2">
+            <nav class="nav d-flex justify-content-between">
+                <a class="p-2 text-dark" th:href="@{/individu/liste}">Individu</a>
+                <a class="p-2 text-dark" th:href="@{/discipline/liste}">Discipline</a>
+                <a class="p-2 text-dark" th:href="@{/division/liste}">Division</a>
+                <a class="p-2 text-dark" th:href="@{/niveau/liste}">Niveau</a>
+            </nav>
+        </div>
+    <!-- Fin header -->
+</div>
+</div>
+
+</body>
+</html>

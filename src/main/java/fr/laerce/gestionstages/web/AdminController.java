@@ -41,7 +41,7 @@ public class AdminController {
         String errorServiceImport = "";
 
         try {
-            this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("/home/kpu/download/sts_emp_0940321S_2017.xml");
+            this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("J:/CDI/JAVAprojets/gestionStages/src/main/docs/sts_emp_0940321S_2017(clean).xml");
         } catch (ImportSTSException e) {
             errorServiceImport = "Erreur traitement XML : " + e.getMessage();
         } catch (Exception e) {
@@ -70,23 +70,6 @@ public class AdminController {
     // voici un extrait de solution de suppression sans confirmation
     // de l'utilisateur (TODO).
 
-    @GetMapping("/disciplines")
-    public String listeDisciplines(Model model) {
-        model.addAttribute("disciplines", repoDiscipline.findAll());
-        return "disciplines";
-    }
-
-    @GetMapping("/deletediscipline/{id}")
-    public String deleteDiscipline(@PathVariable("id") Long id) {
-        // le repository nous oblige à géger les pointeurs null
-        // via un Optional
-        Optional<Discipline> d = repoDiscipline.findById(id);
-        if (d.isPresent()) {
-            repoDiscipline.delete(d.get());
-        }
-        return "redirect:/disciplines";
-    }
-
 
     @GetMapping("/test")
     public String testCheck(Model model) {
@@ -101,7 +84,6 @@ public class AdminController {
             p2.setEmail("aze@error");
             p2.setLogin("login6");
             repoEleve.save(p2);
-
 
 
         } catch (Exception e) {

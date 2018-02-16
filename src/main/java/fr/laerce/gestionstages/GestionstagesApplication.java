@@ -15,7 +15,9 @@ public class GestionstagesApplication implements ApplicationRunner {
   public static void main(String[] args) {
 
         SpringApplication.run(GestionstagesApplication.class, args);
-    }
+      System.out.println("Process Finished ! Start or Reload your web page and enjoy :)");
+
+  }
 
   @Override
   public void run(ApplicationArguments args) throws Exception {

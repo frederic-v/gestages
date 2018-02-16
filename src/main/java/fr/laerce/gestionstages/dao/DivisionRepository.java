@@ -1,7 +1,10 @@
 package fr.laerce.gestionstages.dao;
 
+import fr.laerce.gestionstages.domain.Discipline;
 import fr.laerce.gestionstages.domain.Division;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 /**
  * Projet gestionstages
@@ -12,5 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @author fred
  */
 public interface DivisionRepository extends JpaRepository<Division, Long>{
+    List<Division> findAllByOrderByIdAsc();
     public Division findByCode(String code);
 }

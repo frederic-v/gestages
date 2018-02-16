@@ -63,6 +63,8 @@ public class ImportProfesseursFromSTS {
     /**
      * Permet d'importer (mettre à jour ou création) les professeurs et les disciplines, divisions, niveaux et
      *   auxquels ils sont attachés.
+     *   http://cria.ac-amiens.fr/cria/cria/cartable/sconet/pagesHtmFormateur/glossaire.htm
+     *   http://cria.ac-amiens.fr/cria/cria/cartable/sconet/aideEnLigne/aideSTS_V2/00-glossaire.htm
      *
      * @param fileName document XML au format STS (URL  vers la description
      *                 de la structure XML STSWEB du SIECLE ?)
