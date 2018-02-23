@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upload</title>
+    <div th:replace="fragments/header :: header-css"/>
+</head>
+<body>
+<div th:replace="fragments/header :: menu"/>
+<h1>Spring Boot - Upload Status</h1>
+
+<div th:if="${message}">
+    <h2 th:text="${message}"/>
+</div>
+<a th:href="@{'/populate'}">Charger les infos dans la BDD + retour à l'index<br />Veuillez patienter durant l'import<br />Cela peut prendre plusieurs minutes ...</a>
+<div th:replace="fragments/footer :: footer"/>
+</body>
+</html>

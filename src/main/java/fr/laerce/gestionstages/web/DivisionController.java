@@ -55,6 +55,8 @@ public class DivisionController {
     @PostMapping("/division/update")
     public String formPost(@ModelAttribute Division division){
         System.out.println(division);
+        System.out.println(division.getCode());
+        System.out.println(division.getLibelle());
         System.out.println(division.getNiveau());
         repoDivision.save(division);
         return "redirect:/division/liste";
@@ -74,15 +76,16 @@ public class DivisionController {
     public String modif(@PathVariable("id")Long id, ModelMap model){
         Optional<Division> division = repoDivision.findById(id);
         ////
-        Optional<Niveau> niveau = repoNiveau.findById(division.get().getNiveau().getId());
+        //Optional<Niveau> niveau = repoNiveau.findById(division.get().getNiveau().getId());
         ////
         List<Niveau> niveaux = repoNiveau.findAllByOrderByIdAsc();
         ////
         System.out.println("-----> MODIF   "+division.get());
         model.addAttribute("division",division.get());
-        if (niveau.isPresent()) {
+        System.out.println(division.get().getNiveau());
+        /*if (niveau.isPresent()) {
             model.addAttribute("niveau", niveau.get());
-        }
+        }*/
         model.addAttribute("niveaux", niveaux);
         model.addAttribute("action", "modif");
         return "admin/divisionform";

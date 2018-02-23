@@ -23,11 +23,14 @@
     <p>Libelle : <input type="text" th:field="*{libelle}" /></p>
     <!-- TODO mettre en liste les niveaux ? Mapping liste niveaux + details du niveau-->
     <p>Niveau :
+        <input type="text" th:field="*{niveau}"></p>
+        <!--
         <select>
-            <div th:if="${action} == 'modif'"><option th:value="*{niveau}" th:text="${niveau}"></option></div>
+            <div th:if="${action} == 'modif'"><option th:text="*{niveau}"></option></div>
             <div th:unless="${action} == 'modif'"><option></option></div>
             <option th:each="nx : ${niveaux}" th:value="*{niveau}" th:text="${nx}"></option>
         </select>
+        -->
 
         <!--<input type="text" th:field="*{niveau}" /></p>-->
     <p><input type="submit" value="Valider"/> <input type="reset" value="Reset" /></p>

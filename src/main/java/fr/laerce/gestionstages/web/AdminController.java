@@ -9,9 +9,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.xml.sax.SAXParseException;
 
-import java.util.Optional;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 
 @Controller
@@ -35,13 +44,16 @@ public class AdminController {
     @Autowired
     private ImportProfesseursFromSTS importProfesseursFromSTS;
 
-
     @GetMapping("/populate")
     public String populate(Model model) {
         String errorServiceImport = "";
 
         try {
-            this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("J:/CDI/JAVAprojets/gestionStages/src/main/docs/sts_emp_0940321S_2017(clean).xml");
+            // changer le lien avec le fichier dans le docs
+            //this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("J:/CDI/JAVAprojets/gestionStages/src/main/docs/sts_emp_0940321S_2017(clean).xml");
+            this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("J:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/sts_emp.xml");
+            //this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("F:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/sts_emp.xml");
+
         } catch (ImportSTSException e) {
             errorServiceImport = "Erreur traitement XML : " + e.getMessage();
         } catch (Exception e) {
@@ -56,8 +68,57 @@ public class AdminController {
         model.addAttribute("disciplines", importProfesseursFromSTS.getDicoDisciplines().size());
         model.addAttribute("divisions", importProfesseursFromSTS.getDicoDivisions().size());
         model.addAttribute("individus", importProfesseursFromSTS.getDicoIndividus().size());
-        return "populate";
+
+        System.out.println("importSTS finished");
+        System.out.println("Opening of the web page index");
+        // rediriger vers l'index
+        //return "populate";
+        return "redirect:/";
     }
+
+    // GESTION DE L'UPLOAD DU FICHIER
+    //Save the uploaded file to this folder
+    private static String UPLOADED_FOLDER = "J:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/";
+    //private static String UPLOADED_FOLDER = "F:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/";
+
+    @PostMapping("/upload") // //new annotation since 4.3
+    public String singleFileUpload(@RequestParam("file") MultipartFile file,
+                                   RedirectAttributes redirectAttributes) {
+
+        if (file.isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Please select a file to upload");
+            return "redirect:uploadStatus";
+        }
+
+        try {
+            //System.out.println(file.getOriginalFilename());
+            // Get the file and save it somewhere
+            byte[] bytes = file.getBytes();
+            //Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+            Path path = Paths.get(UPLOADED_FOLDER + "sts_emp.xml");
+            //System.out.println(path);
+            Files.write(path, bytes);
+
+            redirectAttributes.addFlashAttribute("message",
+                    "You successfully uploaded '" + file.getOriginalFilename() + "'");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "redirect:/uploadStatus";
+    }
+
+    @GetMapping("/upload")
+    public String upload(){
+        return "admin/upload";
+    }
+
+    @GetMapping("/uploadStatus")
+    public String uploadStatus() {
+        return "admin/uploadStatus";
+    }
+    // FIN GESTION UPLOAD
+
 
 
     // après avoir étudier
@@ -68,7 +129,7 @@ public class AdminController {
     // des objets de type Discipline
 
     // voici un extrait de solution de suppression sans confirmation
-    // de l'utilisateur (TODO).
+    // de l'utilisateur.
 
 
     @GetMapping("/test")
