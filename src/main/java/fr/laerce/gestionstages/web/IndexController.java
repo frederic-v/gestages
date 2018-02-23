@@ -28,6 +28,13 @@ public class IndexController {
         return "index";
     }
 
+    // TODO login
+    @GetMapping("/login")
+    public String login() {
+        return "index";
+    }
+    // FIN TODO
+
     // TODO placer vers ProfesseursController ?
     @GetMapping("/professeurs/{codeSynchro}/divisions")
     @ResponseBody
