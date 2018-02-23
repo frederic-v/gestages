@@ -38,7 +38,7 @@ public class IndexController {
     public String login() {
         return "login";
     }
-    
+
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
