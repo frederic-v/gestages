@@ -15,8 +15,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/webjars/**","/index").permitAll()
-                    .antMatchers("/discipline/**","/division/**","/individu/**","/niveau/**").hasRole("USER")
-                    .antMatchers("/admin/**","/upload").hasRole("ADMIN")
+                    //.antMatchers("/discipline/**","/division/**","/individu/**","/niveau/**").hasRole("USER") user all access
+                    .antMatchers("/discipline/liste","/division/liste","/individu/liste","/niveau/liste").hasRole("USER") // on met le plus restreint en premier
+                    .antMatchers("/admin/**","/upload","/discipline/**","/division/**","/individu/**","/niveau/**").hasRole("ADMIN") // on met le moins restreint en dernier
+
+
 
                 .and()
 

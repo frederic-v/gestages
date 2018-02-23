@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <title>Gestion des niveaux</title>
     <div th:replace="fragments/header :: header-css"/>
@@ -16,7 +17,7 @@
         <th>code</th>
         <th>libelleCourt</th>
         <th>libelleLong</th>
-        <th colspan="2">Action</th>
+        <th colspan="2" sec:authorize="hasRole('ADMIN')">Action</th>
     </tr>
     <tr th:each="n : ${niveaux}" class="text-center">
         <td th:text="${n.id}">id</td>
@@ -35,10 +36,10 @@
             </form>
         </td>
         -->
-        <td>
+        <td sec:authorize="hasRole('ADMIN')">
             <a th:href="@{'/niveau/modif/' + ${n.id}}" class="btn btn-sm btn-outline-warning text-center">modify</a>
         </td>
-        <td>
+        <td sec:authorize="hasRole('ADMIN')">
             <a th:href="@{'/niveau/delete/' + ${n.id}}" class="btn btn-sm btn-outline-danger text-center">delete</a>
         </td>
     </tr>
@@ -48,7 +49,7 @@
         <p><input type="submit" value="Ajouter un niveau" /></p>
     </form>
     -->
-    <div class="text-center">
+    <div class="text-center" sec:authorize="hasRole('ADMIN')">
         <a th:href="@{'/niveau/form'}" class="btn btn-sm btn-outline-success">Ajouter un niveau</a>
     </div>
 </div>
