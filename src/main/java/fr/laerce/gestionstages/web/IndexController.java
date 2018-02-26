@@ -39,6 +39,8 @@ public class IndexController {
         return "login";
     }
 
+
+
     @GetMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -84,7 +86,10 @@ public class IndexController {
     // FIN TODO
 
 
-
+    @GetMapping("/403")
+    public String error403() {
+        return "/error/403";
+    }
 
     /** un dropdown qui fonctionne avec BT-beta et CDN qui vont bien
      *
