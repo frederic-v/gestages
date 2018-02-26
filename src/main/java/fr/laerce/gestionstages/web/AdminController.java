@@ -6,6 +6,7 @@ import fr.laerce.gestionstages.domain.*;
 import fr.laerce.gestionstages.service.ImportProfesseursFromSTS;
 import fr.laerce.gestionstages.service.ImportSTSException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +45,12 @@ public class AdminController {
     @Autowired
     private ImportProfesseursFromSTS importProfesseursFromSTS;
 
+    @Value("${gstages.import}")
+    private String stsFileName;
+
+    @Value("${gstages.upload.dir}")
+    private String uploadFolder;
+
     @GetMapping("/populate")
     public String populate(Model model) {
         String errorServiceImport = "";
@@ -51,7 +58,7 @@ public class AdminController {
         try {
             // changer le lien avec le fichier dans le docs
             //this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("J:/CDI/JAVAprojets/gestionStages/src/main/docs/sts_emp_0940321S_2017(clean).xml");
-            this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("J:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/sts_emp.xml");
+            this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase(stsFileName);
             //this.importProfesseursFromSTS.parseAndCreateUpdateIntoDatabase("F:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/sts_emp.xml");
 
         } catch (ImportSTSException e) {
@@ -78,7 +85,7 @@ public class AdminController {
 
     // GESTION DE L'UPLOAD DU FICHIER
     //Save the uploaded file to this folder
-    private static String UPLOADED_FOLDER = "J:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/";
+    //private static String UPLOADED_FOLDER = "J:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/";
     //private static String UPLOADED_FOLDER = "F:/CDI/JAVAprojets/gestionStagesV2Layout/src/main/docs/";
 
     @PostMapping("/upload") // //new annotation since 4.3
@@ -95,7 +102,7 @@ public class AdminController {
             // Get the file and save it somewhere
             byte[] bytes = file.getBytes();
             //Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-            Path path = Paths.get(UPLOADED_FOLDER + "sts_emp.xml");
+            Path path = Paths.get(uploadFolder + "sts_emp.xml");
             //System.out.println(path);
             Files.write(path, bytes);
 
