@@ -1,6 +1,7 @@
 package fr.laerce.gestionstages.configuration;
 
 
+import fr.laerce.gestionstages.service.UserDetailsServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -12,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    UserDetailsServiceJPA userDetailsServiceJPA;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -32,19 +36,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
+       /* auth
                 .inMemoryAuthentication()
                     .withUser("user").password("{noop}password").roles("USER")
                 .and()
-                    .withUser("admin").password("{noop}mdp").roles("ADMIN","USER");
+                    .withUser("admin").password("{noop}mdp").roles("ADMIN","USER");*/
+        auth.userDetailsService(userDetailsServiceJPA);
     }
 
-   /*
+
    @Bean
     public PasswordEncoder encoder() {
         return new BCryptPasswordEncoder(11);
     }
-    */
+
 }
 
 
